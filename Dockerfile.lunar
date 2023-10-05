@@ -1,4 +1,4 @@
-# Copyright 2018 The Cartographer Authors
+# Copyright 2016 The Cartographer Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ros:melodic
+FROM ros:lunar
 
 ARG CARTOGRAPHER_VERSION=master
 
 # We require a GitHub access token to be passed.
 ARG github_token
 
-# Bionic's base image doesn't ship with sudo.
+# Xenial's base image doesn't ship with sudo.
 RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
 
 # First, we invalidate the entire cache if googlecartographer/cartographer has

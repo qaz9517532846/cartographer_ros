@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copyright 2016 The Cartographer Authors
 #
@@ -17,19 +17,13 @@
 set -o errexit
 set -o verbose
 
-# Install CMake, Ninja, stow.
-sudo apt-get update
-sudo apt-get install -y lsb-release cmake ninja-build stow
-
-# Install GMock library and header files for newer distributions.
-if [[ "$(lsb_release -sc)" = "focal" || "$(lsb_release -sc)" = "buster" ]]
-then
-  sudo apt-get install -y libgmock-dev
-fi
-
 . /opt/ros/${ROS_DISTRO}/setup.sh
 
 cd catkin_ws
+
+# Install Ninja.
+apt-get update
+apt-get install -y ninja-build
 
 # Install rosdep dependencies.
 rosdep update
