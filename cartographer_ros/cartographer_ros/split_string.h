@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef CARTOGRAPHER_ROS_CARTOGRAPHER_ROS_TIME_CONVERSION_H
-#define CARTOGRAPHER_ROS_CARTOGRAPHER_ROS_TIME_CONVERSION_H
+#ifndef CARTOGRAPHER_ROS_CARTOGRAPHER_ROS_SPLIT_STRING_H
+#define CARTOGRAPHER_ROS_CARTOGRAPHER_ROS_SPLIT_STRING_H
 
-#include "cartographer/common/time.h"
-#include <builtin_interfaces/msg/time.hpp>
+#include <string>
+#include <vector>
 
 namespace cartographer_ros {
 
-builtin_interfaces::msg::Time ToRos(::cartographer::common::Time time);
-
-::cartographer::common::Time FromRos(const builtin_interfaces::msg::Time& time);
+// Split 'input' at 'delimiter'.
+std::vector<std::string> SplitString(const std::string& input, char delimiter);
 
 }  // namespace cartographer_ros
 
-#endif  // CARTOGRAPHER_ROS_CARTOGRAPHER_ROS_TIME_CONVERSION_H
+#endif  // CARTOGRAPHER_ROS_CARTOGRAPHER_ROS_SPLIT_STRING_H
