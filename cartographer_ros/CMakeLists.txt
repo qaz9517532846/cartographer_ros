@@ -150,12 +150,6 @@ set(TARGET_COMPILE_FLAGS "${TARGET_COMPILE_FLAGS} ${GOOG_CXX_FLAGS}")
 set_target_properties(${PROJECT_NAME} PROPERTIES
   COMPILE_FLAGS ${TARGET_COMPILE_FLAGS})
 
-add_library(start_trajectory_main cartographer_ros/start_trajectory_main.cc)
-target_link_libraries(${PROJECT_NAME} PUBLIC cartographer)
-target_link_libraries(${PROJECT_NAME} PUBLIC gflags)
-ament_target_dependencies(start_trajectory_main rclcpp geometry_msgs tf2 tf2_ros cartographer_ros_msgs tf2_geometry_msgs geometry_msgs)
-#ament_target_dependencies(start_trajectory_main gflags)
-
 # install(PROGRAMS scripts/tf_remove_frames.py
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
@@ -166,7 +160,6 @@ install(DIRECTORY configuration_files
 
 install(TARGETS
   ${PROJECT_NAME}
-  start_trajectory_main
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)

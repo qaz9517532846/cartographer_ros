@@ -35,10 +35,16 @@ add_executable(pbstream_to_ros_map_node
 target_include_directories(pbstream_to_ros_map_node SYSTEM PUBLIC ${LUA_INCLUDE_DIR})
 target_link_libraries(pbstream_to_ros_map_node ${PROJECT_NAME})
 
+add_executable(start_trajectory_main start_trajectory_main.cc)
+target_include_directories(start_trajectory_main SYSTEM PUBLIC ${LUA_INCLUDE_DIR})
+target_link_libraries(start_trajectory_main ${PROJECT_NAME})
+ament_target_dependencies(start_trajectory_main rclcpp geometry_msgs tf2 tf2_ros cartographer_ros_msgs tf2_geometry_msgs geometry_msgs)
+
 install(TARGETS
   cartographer_node
   occupancy_grid_node
   pbstream_to_ros_map_node
+  start_trajectory_main
   DESTINATION lib/${PROJECT_NAME})
 
 # google_binary(cartographer_assets_writer
