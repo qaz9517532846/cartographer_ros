@@ -48,11 +48,11 @@ DEFINE_string(configuration_basename, "",
               "Basename, i.e. not containing any directory prefix, of the "
               "configuration file.");
 
-DEFINE_string(load_state_filename, "",
+/*DEFINE_string(load_state_filename, "",
               "Filename of a pbstream to draw a map from.");
 
 
-DEFINE_string(initial_pose, "", "Starting pose of a new trajectory");
+DEFINE_string(initial_pose, "", "Starting pose of a new trajectory");*/
 
 int current_trajectory_id_ = 1;
 
@@ -93,16 +93,9 @@ class Cartographer_InitialPose : public rclcpp::Node
       auto file_resolver = cartographer::common::make_unique<cartographer::common::ConfigurationFileResolver>(std::vector<std::string>{FLAGS_configuration_directory});
       const std::string code = file_resolver->GetFileContentOrDie(FLAGS_configuration_basename);
       auto lua_parameter_dictionary = cartographer::common::LuaParameterDictionary::NonReferenceCounted(code, std::move(file_resolver));
-      if(!FLAGS_initial_pose.empty())
-      {
-        auto initial_trajectory_pose_file_resolver = cartographer::common::make_unique<cartographer::common::ConfigurationFileResolver>(std::vector<std::string>{FLAGS_configuration_directory});
-        auto initial_trajectory_pose = cartographer::common::LuaParameterDictionary::NonReferenceCounted("return " + initialPoseLua, std::move(initial_trajectory_pose_file_resolver));
-        return CreateTrajectoryOptions(lua_parameter_dictionary.get(), initial_trajectory_pose.get(), rclcpp::Node::now());
-      }
-      else
-      {
-        return CreateTrajectoryOptions(lua_parameter_dictionary.get());
-      }
+      auto initial_trajectory_pose_file_resolver = cartographer::common::make_unique<cartographer::common::ConfigurationFileResolver>(std::vector<std::string>{FLAGS_configuration_directory});
+      auto initial_trajectory_pose = cartographer::common::LuaParameterDictionary::NonReferenceCounted("return " + initialPoseLua, std::move(initial_trajectory_pose_file_resolver));
+      return CreateTrajectoryOptions(lua_parameter_dictionary.get(), initial_trajectory_pose.get(), rclcpp::Node::now());
     }
 
     void initialpose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr pose)
@@ -161,8 +154,8 @@ class Cartographer_InitialPose : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
-  rclcpp::init(argc, argv);
-
+  ::rclcpp::init(argc, argv);
+  google::AllowCommandLineReparsing();
   google::InitGoogleLogging(argv[0]);
   google::SetUsageMessage(
   "\n\n"
@@ -170,7 +163,7 @@ int main(int argc, char * argv[])
   "file that is accepted by the node as well and starts a new trajectory "
   "using its settings.\n");
 
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  google::ParseCommandLineFlags(&argc, &argv, false);
 
   CHECK(!FLAGS_configuration_basename.empty())
   << "-configuration_basename is missing.";
@@ -178,7 +171,10 @@ int main(int argc, char * argv[])
   CHECK(!FLAGS_configuration_directory.empty())
   << "-configuration_directory is missing.";
 
-  rclcpp::spin(std::make_shared<cartographer_ros::Cartographer_InitialPose>());
-  rclcpp::shutdown();
+  printf("FLAGS_configuration_basename = %s\n", FLAGS_configuration_basename.c_str());
+  printf("FLAGS_configuration_directory = %s\n", FLAGS_configuration_directory.c_str());
+
+  ::rclcpp::spin(std::make_shared<cartographer_ros::Cartographer_InitialPose>());
+  ::rclcpp::shutdown();
   return 0;
 }
