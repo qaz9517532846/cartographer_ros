@@ -153,7 +153,7 @@ Sources of data include occupied space (points from the scan), translation and r
 
 .. code-block:: lua
 
-    TRAJECTORY_BUILDER_2D.ceres_scan_matcher.occupied_space_weight
+    TRAJECTORY_BUILDER_3D.ceres_scan_matcher.occupied_space_weight
     TRAJECTORY_BUILDER_3D.ceres_scan_matcher.occupied_space_weight_0
     TRAJECTORY_BUILDER_3D.ceres_scan_matcher.occupied_space_weight_1
     TRAJECTORY_BUILDER_nD.ceres_scan_matcher.translation_weight
@@ -253,7 +253,7 @@ Scan matching starts by aligning far points of the low resolution point cloud wi
 Global SLAM
 -----------
 
-While the local SLAM generates its succession of submaps, a global optimization (usually referred to as "*the optimization problem*" or "*sparse pose adjustment*") task runs in background.
+While the local SLAM generates its succession of submaps, a global optimization (usually refered to as "*the optimization problem*" or "*sparse pose adjustment*") task runs in background.
 Its role is to re-arrange submaps between each other so that they form a coherent global map.
 For instance, this optimization is in charge of altering the currently built trajectory to properly align submaps with regards to loop closures.
 
@@ -269,7 +269,7 @@ The optimization is run in batches once a certain number of trajectory nodes was
 
 The global SLAM is a kind of "*GraphSLAM*", it is essentially a pose graph optimization which works by building **constraints** between **nodes** and submaps and then optimizing the resulting constraints graph.
 Constraints can intuitively be thought of as little ropes tying all nodes together.
-The sparse pose adjustment fastens those ropes altogether.
+The sparse pose adjustement fastens those ropes altogether.
 The resulting net is called the "*pose graph*".
 
 .. note::
@@ -278,7 +278,7 @@ The resulting net is called the "*pose graph*".
 
 - Non-global constraints (also known as intra submaps constraints) are built automatically between nodes that are closely following each other on a trajectory.
   Intuitively, those "*non-global ropes*" keep the local structure of the trajectory coherent.
-- Global constraints (also referred to as loop closure constraints or inter submaps constraints) are regularly searched between a new submap and previous nodes that are considered "*close enough*" in space (part of a certain **search window**) and a strong fit (a good match when running scan matching).
+- Global constraints (also referred to as loop closure constraints or inter submaps contraints) are regularly searched between a new submap and previous nodes that are considered "*close enough*" in space (part of a certain **search window**) and a strong fit (a good match when running scan matching).
   Intuitively, those "*global ropes*" introduce knots in the structure and firmly bring two strands closer.
 
 .. code-block:: lua
@@ -338,7 +338,7 @@ The weights and Ceres options can be configured as described in the :ref:`local-
 
 .. note::
 
-    One can find useful information about the residuals used in the optimization problem by toggling ``POSE_GRAPH.log_residual_histograms``
+    One can find useful information about the residuals used in the optimization problem by toggling ``POSE_GRAPH.max_num_final_iterations``
 
 As part of its IMU residual, the optimization problem gives some flexibility to the IMU pose and, by default, Ceres is free to optimize the extrinsic calibration between your IMU and tracking frame.
 If you don't trust your IMU pose, the results of Ceres' global optimization can be logged and used to improve your extrinsic calibration.

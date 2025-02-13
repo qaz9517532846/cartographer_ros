@@ -23,6 +23,7 @@ The Cartographer ROS requirements are the same as `the ones from Cartographer`_.
 
 The following `ROS distributions`_ are currently supported:
 
+* Kinetic
 * Melodic
 * Noetic
 
@@ -69,6 +70,8 @@ The command 'sudo rosdep init' will print an error if you have already executed 
     sudo rosdep init
     rosdep update
     rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y
+
+    # Only on Ubuntu 16 / ROS Kinetic: src/cartographer/scripts/install_proto3.sh 
 
 Cartographer uses the `abseil-cpp`_ library that needs to be manually installed using this script:
 
