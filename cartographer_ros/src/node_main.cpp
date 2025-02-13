@@ -76,6 +76,7 @@ void Run() {
   }
 
   if (FLAGS_start_trajectory_with_default_topics) {
+    node->TrajectoryOptionInit(trajectory_options);
     node->StartTrajectoryWithDefaultTopics(trajectory_options);
   }
 

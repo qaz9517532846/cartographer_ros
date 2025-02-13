@@ -122,6 +122,8 @@ class Node {
   // Loads a serialized SLAM state from a .pbstream file.
   void LoadState(const std::string& state_filename, bool load_frozen_state);
 
+  void TrajectoryOptionInit(const TrajectoryOptions& options);
+
  private:
   struct Subscriber {
     rclcpp::SubscriptionBase::SharedPtr subscriber;
@@ -172,7 +174,7 @@ class Node {
   cartographer_ros_msgs::msg::StatusResponse FinishTrajectoryUnderLock(
       int trajectory_id) EXCLUSIVE_LOCKS_REQUIRED(mutex_);
   void MaybeWarnAboutTopicMismatch();
-  void Reset_InitPose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
+  void ResetInitPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
 
   // Helper function for service handlers that need to check trajectory states.
   cartographer_ros_msgs::msg::StatusResponse TrajectoryStateToStatus(
@@ -245,7 +247,7 @@ class Node {
   ::rclcpp::TimerBase::SharedPtr constrain_list_timer_;
   ::rclcpp::TimerBase::SharedPtr maybe_warn_about_topic_mismatch_timer_;
 
-  cartographer_ros::TrajectoryOptions* trajectory_options_handle;
+  TrajectoryOptions* trajectory_options_handle;
 };
 
 }  // namespace cartographer_ros
