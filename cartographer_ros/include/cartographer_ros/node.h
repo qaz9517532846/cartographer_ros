@@ -247,7 +247,7 @@ class Node {
   ::rclcpp::TimerBase::SharedPtr constrain_list_timer_;
   ::rclcpp::TimerBase::SharedPtr maybe_warn_about_topic_mismatch_timer_;
 
-  TrajectoryOptions* trajectory_options_handle;
+  TrajectoryOptions trajectory_options_handle;
 };
 
 }  // namespace cartographer_ros

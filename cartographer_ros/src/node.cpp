@@ -584,14 +584,14 @@ cartographer_ros_msgs::msg::StatusResponse Node::FinishTrajectoryUnderLock(
 
 void Node::ResetInitPoseCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
   FinishAllTrajectories();
-  *trajectory_options_handle->trajectory_builder_options.mutable_initial_trajectory_pose()->mutable_relative_pose()
+  *trajectory_options_handle.trajectory_builder_options.mutable_initial_trajectory_pose()->mutable_relative_pose()
       = cartographer::transform::ToProto(cartographer_ros::ToRigid3d(msg->pose.pose));
-  StartTrajectoryWithDefaultTopics(*trajectory_options_handle);
+  StartTrajectoryWithDefaultTopics(trajectory_options_handle);
 }
 
 void Node::TrajectoryOptionInit(const TrajectoryOptions& options)
 {
-  *trajectory_options_handle = (options);
+  trajectory_options_handle = options;
 }
 
 bool Node::handleStartTrajectory(
