@@ -19,10 +19,8 @@
 #include "cartographer_ros/node.h"
 #include "cartographer_ros/node_options.h"
 #include "cartographer_ros/ros_log_sink.h"
-#include "cartographer_ros/msg_conversion.h"
 #include "gflags/gflags.h"
 #include "tf2_ros/transform_listener.h"
-#include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
 
 DEFINE_bool(collect_metrics, false,
             "Activates the collection of runtime metrics. If activated, the "
@@ -46,21 +44,8 @@ DEFINE_string(
     save_state_filename, "",
     "If non-empty, serialize state and write it to disk before shutting down.");
 
-cartographer_ros::Node* node_handle;
-cartographer_ros::TrajectoryOptions* trajectory_options_handle;
-
 namespace cartographer_ros {
 namespace {
-
-void Reset_InitPose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
-  /*node_handle->FinishAllTrajectories();
-  *trajectory_options_handle->trajectory_builder_options.mutable_initial_trajectory_pose()->mutable_relative_pose()
-    = cartographer::transform::ToProto(cartographer_ros::ToRigid3d(msg->pose.pose));
-  if (FLAGS_start_trajectory_with_default_topics) 
-  {
-    node_handle->StartTrajectoryWithDefaultTopics(*trajectory_options_handle);
-  }*/
-}
 
 void Run() {
   rclcpp::Node::SharedPtr cartographer_node = rclcpp::Node::make_shared("cartographer_node");
@@ -85,11 +70,7 @@ void Run() {
   auto node = std::make_shared<cartographer_ros::Node>(
     node_options, std::move(map_builder), tf_buffer, cartographer_node,
     FLAGS_collect_metrics);
-  trajectory_options_handle = &(trajectory_options);
-  node_handle = node.get();
-  /*rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initPose_sub = 
-    node_handle->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose", 10,
-                                            std::bind(Reset_InitPose_callback, std::placeholders::_1));*/
+
   if (!FLAGS_load_state_filename.empty()) {
     node->LoadState(FLAGS_load_state_filename, FLAGS_load_frozen_state);
   }

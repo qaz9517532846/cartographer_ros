@@ -32,6 +32,7 @@
 #include "cartographer_ros/metrics/family_factory.h"
 #include "cartographer_ros/node_constants.h"
 #include "cartographer_ros/node_options.h"
+#include "cartographer_ros/msg_conversion.h"
 #include "cartographer_ros/trajectory_options.h"
 #include "cartographer_ros_msgs/srv/finish_trajectory.hpp"
 #include "cartographer_ros_msgs/srv/get_trajectory_states.hpp"
@@ -49,6 +50,7 @@
 #include <sensor_msgs/msg/multi_echo_laser_scan.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
@@ -170,6 +172,7 @@ class Node {
   cartographer_ros_msgs::msg::StatusResponse FinishTrajectoryUnderLock(
       int trajectory_id) EXCLUSIVE_LOCKS_REQUIRED(mutex_);
   void MaybeWarnAboutTopicMismatch();
+  void Reset_InitPose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg);
 
   // Helper function for service handlers that need to check trajectory states.
   cartographer_ros_msgs::msg::StatusResponse TrajectoryStateToStatus(
@@ -192,6 +195,8 @@ class Node {
   ::rclcpp::Publisher<::visualization_msgs::msg::MarkerArray>::SharedPtr constraint_list_publisher_;
   ::rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr tracked_pose_publisher_;
   ::rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr scan_matched_point_cloud_publisher_;
+
+  ::rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr initPose_sub;
   // These ros service servers need to live for the lifetime of the node.
   ::rclcpp::Service<cartographer_ros_msgs::srv::SubmapQuery>::SharedPtr submap_query_server_;
   ::rclcpp::Service<cartographer_ros_msgs::srv::TrajectoryQuery>::SharedPtr trajectory_query_server;
@@ -239,6 +244,8 @@ class Node {
   ::rclcpp::TimerBase::SharedPtr landmark_pose_list_timer_;
   ::rclcpp::TimerBase::SharedPtr constrain_list_timer_;
   ::rclcpp::TimerBase::SharedPtr maybe_warn_about_topic_mismatch_timer_;
+
+  cartographer_ros::TrajectoryOptions* trajectory_options_handle;
 };
 
 }  // namespace cartographer_ros

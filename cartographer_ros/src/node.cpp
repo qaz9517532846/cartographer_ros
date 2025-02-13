@@ -127,6 +127,10 @@ Node::Node(
       node_->create_publisher<sensor_msgs::msg::PointCloud2>(
         kScanMatchedPointCloudTopic, 10);
 
+  initPose_sub = 
+      node_->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>("initialpose", 10,
+            std::bind(&Node::Reset_InitPose_callback, this, std::placeholders::_1));
+
   submap_query_server_ = node_->create_service<cartographer_ros_msgs::srv::SubmapQuery>(
       kSubmapQueryServiceName,
       std::bind(
@@ -576,6 +580,16 @@ cartographer_ros_msgs::msg::StatusResponse Node::FinishTrajectoryUnderLock(
       "Finished trajectory " + std::to_string(trajectory_id) + ".";
   status_response.code = cartographer_ros_msgs::msg::StatusCode::OK;
   return status_response;
+}
+
+void Node::Reset_InitPose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
+  FinishAllTrajectories();
+  /* *trajectory_options_handle->trajectory_builder_options.mutable_initial_trajectory_pose()->mutable_relative_pose()
+    = cartographer::transform::ToProto(cartographer_ros::ToRigid3d(msg->pose.pose));
+  if (FLAGS_start_trajectory_with_default_topics) 
+  {
+    node_handle->StartTrajectoryWithDefaultTopics(*trajectory_options_handle);
+  }*/
 }
 
 bool Node::handleStartTrajectory(
